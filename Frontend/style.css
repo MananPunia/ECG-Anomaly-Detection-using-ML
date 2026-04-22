@@ -91,9 +91,7 @@ h3 {
 h1 {
     font-size: 3.5rem;
     font-weight: 800;
-    background: -webkit-linear-gradient(45deg, #fecaca, #ef4444);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: whitesmoke;
     line-height: 1.2;
     margin-bottom: 20px;
 }
