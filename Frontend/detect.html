@@ -16,13 +16,13 @@
 
     <div class="container">
         <div class="card">
-            <h2>🚨 Live ECG Detection</h2>
+            <h2>Live ECG Detection</h2>
             <p>Enter exactly 187 comma-separated ECG signal values to predict the AAMI heart condition class.</p>
 
             <textarea id="ecgInput" rows="6" placeholder="e.g. 0.97, 0.92, 0.68, 0.24, 0.15, ... (187 values)"></textarea>
 
             <br><br>
-            <button id="predictBtn" onclick="predict()">Run Prediction ⚡</button>
+            <button id="predictBtn" onclick="predict()">Run Prediction</button>
 
             <div class="result-box" id="resultBox">
                 <div class="result-title" id="predClass">Result</div>
@@ -52,7 +52,7 @@
             })
             .then(response => response.json())
             .then(data => {
-                btn.textContent = "Run Prediction ⚡";
+                btn.textContent = "Run Prediction";
                 btn.disabled = false;
                 
                 const box = document.getElementById("resultBox");
@@ -69,12 +69,13 @@
                 }
             })
             .catch(error => {
-                btn.textContent = "Run Prediction ⚡";
+                btn.textContent = "Run Prediction";
                 btn.disabled = false;
                 alert("Failed to connect to the backend API.");
             });
         }
     </script>
 
+    <script src="cursor.js"></script>
 </body>
 </html>
