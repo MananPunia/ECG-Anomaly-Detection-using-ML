@@ -3,8 +3,8 @@ import numpy as np
 import joblib
 
 # Load model + scaler
-model = joblib.load("model.pkl")
-scaler = joblib.load("scaler.pkl")
+model = joblib.load("Model/model.pkl")
+scaler = joblib.load("Model/scaler.pkl")
 
 # UI
 st.title("AAMI Standard ECG Anomaly Detection")
