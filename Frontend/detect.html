@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECG Anomaly Detection | Detect</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="index.html">Home</a>
+        <a href="research.html">Research & Pipeline</a>
+        <a href="detect.html" class="active">Live Detection</a>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <h2>🚨 Live ECG Detection</h2>
+            <p>Enter exactly 187 comma-separated ECG signal values to predict the AAMI heart condition class.</p>
+
+            <textarea id="ecgInput" rows="6" placeholder="e.g. 0.97, 0.92, 0.68, 0.24, 0.15, ... (187 values)"></textarea>
+
+            <br><br>
+            <button id="predictBtn" onclick="predict()">Run Prediction ⚡</button>
+
+            <div class="result-box" id="resultBox">
+                <div class="result-title" id="predClass">Result</div>
+                <p><strong>Confidence:</strong> <span id="predConf">0</span>%</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function predict() {
+            const input = document.getElementById("ecgInput").value;
+            if(!input.trim()) {
+                alert("Please enter ECG values.");
+                return;
+            }
+
+            const ecg = input.split(",").map(val => Number(val.trim()));
+            
+            const btn = document.getElementById("predictBtn");
+            btn.textContent = "Analyzing...";
+            btn.disabled = true;
+
+            fetch("http://127.0.0.1:5000/predict", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ ecg: ecg })
+            })
+            .then(response => response.json())
+            .then(data => {
+                btn.textContent = "Run Prediction ⚡";
+                btn.disabled = false;
+                
+                const box = document.getElementById("resultBox");
+                box.style.display = "block";
+
+                if(data.error) {
+                    document.getElementById("predClass").textContent = "Error";
+                    document.getElementById("predClass").className = "result-title result-danger";
+                    document.getElementById("predConf").parentElement.innerHTML = data.error;
+                } else {
+                    document.getElementById("predClass").textContent = data.result;
+                    document.getElementById("predClass").className = "result-title result-" + data.urgency;
+                    document.getElementById("predConf").parentElement.innerHTML = "<strong>Confidence:</strong> " + data.confidence + "%";
+                }
+            })
+            .catch(error => {
+                btn.textContent = "Run Prediction ⚡";
+                btn.disabled = false;
+                alert("Failed to connect to the backend API.");
+            });
+        }
+    </script>
+
+</body>
+</html>

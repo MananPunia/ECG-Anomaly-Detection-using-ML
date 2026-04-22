@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECG Anomaly Detection | Research</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="index.html">Home</a>
+        <a href="research.html" class="active">Research & Pipeline</a>
+        <a href="detect.html">Live Detection</a>
+    </div>
+
+    <div class="container">
+        
+        <div class="card">
+            <h2>🧠 Project Pipeline</h2>
+            <p><strong>1. Data Extraction:</strong> The MIT-BIH dataset provides 187 time-step features representing a single heartbeat.</p>
+            <p><strong>2. Multi-Class Mapping:</strong> We mapped the annotations to the 5 AAMI standard classes (N, S, V, F, Q).</p>
+            <p><strong>3. Feature Scaling:</strong> Applied <code>StandardScaler</code> fitted solely on the training data to prevent information leakage.</p>
+            <p><strong>4. Class Balancing:</strong> Applied <code>SMOTE</code> (Synthetic Minority Over-sampling Technique) to balance minority anomalies (S, V, F, Q) against the majority Normal (N) class.</p>
+            <p><strong>5. Model Training:</strong> Trained Random Forest, KNN, and Logistic Regression on the balanced dataset.</p>
+        </div>
+
+        <div class="card">
+            <h2>🏆 Algorithm Accuracy Scores</h2>
+            <p>Below are the real-time accuracy scores pulled directly from our trained models API:</p>
+            <pre id="results-json">Loading results...</pre>
+        </div>
+
+        <div class="card" style="text-align: center;">
+            <h2>📉 Evaluation & Confusion Matrix</h2>
+            <p>We rigorously evaluate the Random Forest model using Precision, Recall, F1-Score, and a 5x5 Confusion Matrix to analyze class confusion.</p>
+            <img src="../Model/confusion.png" alt="Confusion Matrix Visualization" onerror="this.style.display='none'; this.insertAdjacentHTML('afterend', '<p style=\'color: #f87171;\'><i>(Run the main.ipynb notebook and save confusion.png to the Model folder to see it here)</i></p>');">
+        </div>
+
+        <div class="card" style="text-align: center;">
+            <h2>🔍 Explainable AI (SHAP)</h2>
+            <p>To ensure clinical trust, we utilize <strong>SHAP (SHapley Additive exPlanations)</strong> to decode the model's decision-making process. The summary plot below illustrates exactly which milliseconds (time-steps) of the ECG waveform pushed the model to predict a <strong>Ventricular Ectopic (Class V)</strong> anomaly. </p>
+            <p style="text-align: left; margin-top: 15px; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; border-left: 4px solid #3b82f6;"><strong>Key Clinical Insights:</strong><br>
+            <br>• <strong>Time-step 2 (t_2):</strong> A high signal (red spike) here strongly drives the model towards a Class V prediction.
+            <br>• <strong>Time-step 0 (t_0):</strong> A low signal (blue dip) at the very start of the heartbeat is a major indicator of a Class V anomaly.</p>
+            <img src="../Model/shap_plot.png" alt="SHAP Summary Plot" style="width: 100%; max-width: 700px; border-radius: 8px; margin-top: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);" onerror="this.style.display='none'; this.insertAdjacentHTML('afterend', '<p style=\'color: #f87171; margin-top: 20px;\'><i>(Run the SHAP cell in main.ipynb and save shap_plot.png to the Model folder to see it here)</i></p>');">
+        </div>
+
+    </div>
+
+    <script>
+        fetch("http://127.0.0.1:5000/results")
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("results-json").textContent = JSON.stringify(data, null, 4);
+        })
+        .catch(err => {
+            document.getElementById("results-json").textContent = "Backend server is offline or training is incomplete.";
+        });
+    </script>
+
+</body>
+</html>
