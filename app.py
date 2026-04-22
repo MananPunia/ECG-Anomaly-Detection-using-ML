@@ -3,8 +3,14 @@ import numpy as np
 import joblib
 
 # Load model + scaler
-model = joblib.load("Model/model.pkl")
-scaler = joblib.load("Model/scaler.pkl")
+# This ensures the app looks in its own folder
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+model_path = os.path.join(BASE_DIR, "model.pkl")
+scaler_path = os.path.join(BASE_DIR, "scaler.pkl")
+
+model = joblib.load(model_path)
+scaler = joblib.load(scaler_path)
 
 # UI
 st.title("AAMI Standard ECG Anomaly Detection")
