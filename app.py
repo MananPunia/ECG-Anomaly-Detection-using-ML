@@ -1,6 +1,7 @@
 import streamlit as st
 import numpy as np
 import joblib
+import os
 
 # Load model + scaler
 # This ensures the app looks in its own folder
